@@ -1,10 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+
+import Header from './components/Header';
+import Input from './components/Input';
+import Nav from './components/Nav';
 
 export default function App() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  function startResultsHandler () {
+    setIsModalVisible(true);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Nav />
+      <Header />
+      <Input changeScreen={startResultsHandler}/>
       <StatusBar style="auto" />
     </View>
   );
@@ -12,9 +25,9 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 6,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
   },
 });
