@@ -1,25 +1,64 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import * as Location from 'expo-location';
 
 import Header from './components/Header';
 import Input from './components/Input';
 import Nav from './components/Nav';
 
 export default function App() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [location, setLocation] = useState({});
+  const [errorMsg, setErrorMsg] = useState('');
 
-  function startResultsHandler () {
-    setIsModalVisible(true);
-  };
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let locationObj = await Location.getCurrentPositionAsync({});
+      setLocation(locationObj.coords);
+    })();
+  }, []);
+console.log(location);
+  // let text = 'Waiting..';
+  // if (errorMsg) {
+  //   text = errorMsg;
+  // } else if (location) {
+  //   text = JSON.stringify({
+  //     location:{
+  //       latitude: location.latitude,
+  //       longitude: location.longitude,
+  //     }});
+  //   console.log(text)
+  // }
+
+  // function onLoad () {
+  //   Geolocation.getCurrentPosition(
+  //     (position) => {
+  //       console.log(position);
+  //     },
+  //     error => {
+  //       console.log(error);
+  //     },
+  //   )};
+
+  // useEffect(() => {
+  //   onLoad();
+  // }, []);
 
   return (
-    <View style={styles.container}>
-      <Nav />
-      <Header />
-      <Input changeScreen={startResultsHandler}/>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <StatusBar style="light" />
+        <View style={styles.container}>
+          <Nav />
+          <Header />
+          <Input location={location}/>
+        </View>
+    </>
   );
 }
 
