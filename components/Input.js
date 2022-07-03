@@ -17,13 +17,15 @@ const Input = (props) => {
     const { latitude, longitude } = props.location;
     let location = `${latitude},${longitude}`;
     
+    
     async function handleGeoSubmit() {
         if (props.locationPermission && !fetched) {
             setIsModalVisible(true);
             setIsLoading(true);
             console.log(`location submitted: ${location}`);
             setResult(await getWeatherData(location));
-            setIsLoading(false);
+            setTimeout(()=> setIsLoading(false), 500)
+            // setIsLoading(false);
             setFetched(true);
         } else {
             setIsModalVisible(true);
@@ -40,8 +42,8 @@ const Input = (props) => {
                 setResult({});
                 console.log(`location submitted: ${zip}`);
                 setResult(await getWeatherData(zip));
-                setIsLoading(false);
-            }
+                setTimeout(()=> setIsLoading(false), 500)
+            } else console.log('no fetch')
         } else {
             console.log(`error - no zip entered`);
         }

@@ -9,9 +9,11 @@ export  async function getWeatherData(zip) {
             rh : data.humidity,
             condition : data.condition,
             city: data.city,
+            state: data.state,
             icon: data.icon,
             hi: data.city == undefined ? 1 : hi,
-            canRun: data.city == undefined ? `Hm... we can't seem to find data for ${zip}` : canRun
+            canRun: data.city == undefined ? `Hm... we can't seem to find data for ${zip}` : canRun,
+            location: zip
         }     
         return transformedData;
 

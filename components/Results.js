@@ -17,7 +17,6 @@ const Results = (props) => {
 
     useEffect(() => {
         let time = getCurrentTime();
-        console.log(time);
         if(time.hh > 6 && time.hh < 8){
             setBg(require('../assets/1.png'))
             setTheme('dark');
@@ -43,6 +42,7 @@ const Results = (props) => {
             setBg(require('../assets/8.png'));
             setTheme('light');
         } 
+        console.log(time);
         setTime(time.hh>12? `${time.hh-12}:${time.mm} PM`: `${time.hh}:${time.mm} AM` );
     }, []);
     const getCurrentTime = () => {
@@ -75,7 +75,7 @@ const Results = (props) => {
                                 <View style={styles.infoContainer}>
                                     <Image style={styles.image} source={{ uri: `https:${result.icon}` }} />
                                     <Text style={text}>{result.condition}</Text>
-                                    <Text style={text}>{result.city},{result.state}</Text>
+                                    <Text style={text}>{result.city}, {result.state}</Text>
                                     <Text style={text}>{time}</Text>
                                 </View>
                                 <View style={styles.statContainer}>
