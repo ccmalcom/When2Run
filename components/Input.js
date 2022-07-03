@@ -1,59 +1,74 @@
 import {
-    Text, Pressable, StyleSheet, View, TextInput,
-    Modal, Image
+    Text, Pressable, StyleSheet, View, TextInput, Button, ActivityIndicator
 } from "react-native";
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { getWeatherData } from "../helpers/Calculations";
+import Results from "./Results";
 
 
 const Input = (props) => {
     const [zip, setZip] = useState('');
-    const [result, setResult] = useState({ canRun: 'Crunching the numbers...' });
+    const [result, setResult] = useState({});
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [fetched, setFetched] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const { latitude, longitude } = props.location;
     let location = `${latitude},${longitude}`;
-
-    async function handleSubmit() {
-        setIsModalVisible(true);
-        if (location) {
+    
+    async function handleGeoSubmit() {
+        if (props.locationPermission && !fetched) {
+            setIsModalVisible(true);
+            setIsLoading(true);
             console.log(`location submitted: ${location}`);
             setResult(await getWeatherData(location));
+            setIsLoading(false);
+            setFetched(true);
         } else {
-            console.log(`zip submit: ${zip}`);
-            setResult(await getWeatherData(zip));
+            setIsModalVisible(true);
+            console.log('no fetch')
         }
-        console.log(result);
     }
+    
+    async function handleZipSubmit() {
+        if (zip !== '') {
+            setIsModalVisible(true);
+            setFetched(false);
+            if(zip !== result.location){
+                setIsLoading(true);
+                setResult({});
+                console.log(`location submitted: ${zip}`);
+                setResult(await getWeatherData(zip));
+                setIsLoading(false);
+            }
+        } else {
+            console.log(`error - no zip entered`);
+        }
+    }
+
+    
 
     return (
         <View style={styles.container}>
-            {!location ? (
-                <View>
-                    <Text>Enter your zipcode</Text>
+            <View>
+                <Text>Enter your zipcode</Text>
+                <View style={styles.buttonContainer}>
                     <TextInput style={styles.input} placeholder="90210" onChangeText={setZip} />
-                </View>) : null}
-            <View >
-                <Pressable onPress={handleSubmit} style={styles.button}>
-                    <Text>Check</Text>
-                </Pressable>
-            </View>
-            <Modal visible={isModalVisible} animationType='fade'>
-                <StatusBar style="dark" />
-                <View style={styles.modal}>
-                    <Text>
-                        {result.canRun}
-                        {result.city}
-                        {result.t}
-                        {result.rh}
-                        {result.condition}
-                        {result.hi}
-                        {result.icon}
-                    </Text>
-                    <Image  style={styles.image} source={{ uri: `https:${result.icon}` }} />
+                    <Button title="Go" onPress={handleZipSubmit} color='red'/>
                 </View>
-            </Modal>
+            </View>
+            <View>
+                <Text>Or</Text>
+            </View>
+            { props.showButton ?
+            <> 
+            <Pressable onPress={handleGeoSubmit} style={styles.button}>
+                <Text style={styles.buttonText}>Check my location</Text>
+            </Pressable></> : <ActivityIndicator color='red'/>
+            
+            }
+            <Results result={result} isVisible={isModalVisible} setVisible={setIsModalVisible} isLoading={isLoading}/>
         </View>
     );
 };
@@ -66,35 +81,33 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'space-around',
+        width: '100%',
+        paddingBottom: 140
     },
     button: {
-        backgroundColor: '#f194ff',
+        backgroundColor: 'red',
         padding: 10,
-        margin: 10,
-        marginBottom: 60,
         borderRadius: 90,
         height: 120,
         width: 120,
         alignItems: 'center',
         justifyContent: 'center',
     },
+    buttonText: {
+        textAlign: 'center',
+        color: 'white'
+    },
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 10,
-        margin: 10,
         borderRadius: 5,
     },
-    image: {
-        width: 100,
-        height: 100,
-        margin: 20
-    },
-    modal: {
-        flex: 1,
+    buttonContainer: {
+        flexDirection: "row",
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 16,
-        backgroundColor: 'white'
-    },
+        marginTop: 10
+    }
+
 });

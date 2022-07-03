@@ -5,13 +5,13 @@ export  async function getWeatherData(zip) {
         let hi = getHi(data.temp, data.humidity);
         let canRun = tooHot(hi) ? 'Too hot!' : 'Can run!';
         let transformedData ={
-            t : data.temperature,
+            t : data.temp,
             rh : data.humidity,
             condition : data.condition,
             city: data.city,
             icon: data.icon,
-            hi: hi,
-            canRun: canRun
+            hi: data.city == undefined ? 1 : hi,
+            canRun: data.city == undefined ? `Hm... we can't seem to find data for ${zip}` : canRun
         }     
         return transformedData;
 
@@ -44,20 +44,20 @@ export const getHi = (t, rh) =>{
     console.log(`before adjustment: ${hi}`);
 
     if (hi <= 80) {
-        hi = (0.5*(t + 61 + ((t-68)*1.2) + (rh*0.094)));
+        hi = Math.round(0.5*(t + 61 + ((t-68)*1.2) + (rh*0.094)));
         console.log(`after hi<=80 adjustment: ${hi}`);
         return hi;
     } else if(rh < 13 && (t >= 80 && t <= 112)){
-        hi = hi - ((13-rh)/4 * Math.sqrt((17-Math.abs(t-95))/17));
+        hi = Math.round( hi - ((13-rh)/4 * Math.sqrt((17-Math.abs(t-95))/17)));
         console.log(`after rh<13 adjustment 2: ${hi}`);
         return hi;
     } else if (rh > 85 && (t >= 80 && t <= 87)){
-         hi = hi - (((rh-85)/10) * ((87-t)/5));
+         hi = Math.round(hi - (((rh-85)/10) * ((87-t)/5)));
         console.log(`after rh>85 t=80-87 adjustment 3: ${hi}`);
         return hi;
     } else {
         console.log(`no adjustment: ${hi}`);
-        return hi;
+        return Math.round(hi);
     }
     
 } 

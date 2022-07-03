@@ -1,0 +1,2 @@
+add state to weather data
+add zip to weather data

@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: 'red',
+        paddingTop: 20
     },
     navContainer:{
         flex: 1,
