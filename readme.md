@@ -17,7 +17,7 @@ Here are some future feature ideas that can further enhance the functionality an
 
 1. **User Authentication**: Implement user authentication and allow users to create accounts to save their preferences, running history, and personalized recommendations.
 
-~~ . **Geolocation**: Instead of manually entering the zip code, integrate geolocation to automatically detect the user's location and provide weather data based on their current location. ~~
+~~. **Geolocation**: Instead of manually entering the zip code, integrate geolocation to automatically detect the user's location and provide weather data based on their current location.~~
 
 3. **Weather Forecast**: Extend the application to provide not only the current weather conditions but also a forecast for the upcoming hours or days. This can help users plan their runs in advance based on expected weather changes.
 
