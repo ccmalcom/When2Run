@@ -6,21 +6,21 @@ const Nav = () => {
             <Text style={styles.navText}>When2Run</Text>
         </View>
     );
-    }
+}
 
-    export default Nav;
+export default Nav;
 
 const styles = StyleSheet.create({
-    navText:{
+    navText: {
         fontSize: 20,
         fontWeight: 'bold',
         color: 'red',
         paddingTop: 20
     },
-    navContainer:{
-        flex: 1,
+    navContainer: {
         backgroundColor: 'black',
-        height: 60,
+        height: 100,
+        paddingTop: 20,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',

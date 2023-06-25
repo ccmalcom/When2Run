@@ -1,2 +1,5 @@
-add state to weather data
-add zip to weather data
+Version 2:
+
+Adding 'home' screen, where all availble feeaturs will be listed.
+
+adding user profile ui page, profile creation, and storage/retreival from local device storage.

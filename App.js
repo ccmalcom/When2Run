@@ -1,52 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { useState, useEffect } from 'react';
-import * as Location from 'expo-location';
+import { StyleSheet, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import Header from './components/Header';
-import Input from './components/Input';
-import Nav from './components/Nav';
+import HomeScreen from './screens/HomeScreen.js';
+import WeatherScreen from './screens/WeatherScreen.js';
+import Header from './components/Header.js';
+import Nav from './components/Nav.js';
+
+const Stack = createStackNavigator();
 
 export default function App() {
-  const [location, setLocation] = useState({});
-  const [locationPermission, setLocationPermission] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [showButton, setShowButton] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      } else {
-        setLocationPermission(true);
-        let locationObj = await Location.getCurrentPositionAsync({});
-        setLocation(locationObj.coords);
-        setShowButton(true)
-      }
-    })();
-  }, []);
-  console.log(location);
-
   return (
     <>
-      <StatusBar style="light" />
-      <View style={styles.container}>
-        <Nav />
-        <Header />
-        <Input location={location} locationPermission={locationPermission} showButton={showButton}/>
-      </View>
+      <Nav />
+      <NavigationContainer>
+        <StatusBar style="light" />
+        <Stack.Navigator
+          initialRouteName='Home'
+          screenOptions={{
+            headerShown: false
+          }}
+        >
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Weather" component={WeatherScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 6,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    paddingBottom: 20,
-  },
-});
